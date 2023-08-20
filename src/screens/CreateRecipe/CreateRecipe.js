@@ -7,6 +7,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
+import { categories } from "../../data/dataArrays";
 
 export default function CreateRecipeScreen(props) {
   const { navigation } = props;
@@ -62,9 +63,13 @@ export default function CreateRecipeScreen(props) {
           style={styles.picker}
           onValueChange={(itemValue) => setCategory(itemValue)}
         >
-          <Picker.Item label="Dessert" value="dessert" />
-          <Picker.Item label="Main Course" value="mainCourse" />
-          {/* Add more categories as needed */}
+          {categories.map((category) => (
+            <Picker.Item
+              key={category.id}
+              label={category.name}
+              value={category.name}
+            />
+          ))}
         </Picker>
       </View>
       <View style={styles.formGroup}>

@@ -12,6 +12,8 @@ import { categories } from "../../data/dataArrays";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore"; 
+
 
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -19,21 +21,22 @@ import { getFirestore, collection, addDoc } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyALY_L5QAVWGS_fx4oYJ8b3Fg-ni8sIELk",
-  authDomain: "recipes-app-6538e.firebaseapp.com",
-  databaseURL: "https://recipes-app-6538e-default-rtdb.firebaseio.com",
-  projectId: "recipes-app-6538e",
-  storageBucket: "recipes-app-6538e.appspot.com",
-  messagingSenderId: "943409972016",
-  appId: "1:943409972016:web:a0ab10c3f46f8b245b3ef5",
-  measurementId: "G-RJWRPB172G"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 export default function CreateRecipeScreen(props) {
+  const firebaseConfig = {
+    apiKey: "AIzaSyALY_L5QAVWGS_fx4oYJ8b3Fg-ni8sIELk",
+    authDomain: "recipes-app-6538e.firebaseapp.com",
+    databaseURL: "https://recipes-app-6538e-default-rtdb.firebaseio.com",
+    projectId: "recipes-app-6538e",
+    storageBucket: "recipes-app-6538e.appspot.com",
+    messagingSenderId: "943409972016",
+    appId: "1:943409972016:web:a0ab10c3f46f8b245b3ef5",
+    measurementId: "G-RJWRPB172G",
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+
+
   const { navigation } = props;
 
   const [recipeTitle, setRecipeTitle] = useState("");

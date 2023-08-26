@@ -45,7 +45,7 @@ export default function DrawerContainer(props) {
           title="WISHLIST"
           source={require("../../../assets/icons/wishlist.png")}
           onPress={() => {
-            navigation.navigate("CreateRecipe");
+            navigation.navigate("Wishlist");
             navigation.closeDrawer();
           }}
         />

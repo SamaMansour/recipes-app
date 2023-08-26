@@ -33,6 +33,22 @@ export default function DrawerContainer(props) {
             navigation.closeDrawer();
           }}
         />
+        <MenuButton
+          title="CREATE RECIPE"
+          source={require("../../../assets/icons/cookie50.png")}
+          onPress={() => {
+            navigation.navigate("CreateRecipe");
+            navigation.closeDrawer();
+          }}
+        />
+        <MenuButton
+          title="WISHLIST"
+          source={require("../../../assets/icons/wishlist.png")}
+          onPress={() => {
+            navigation.navigate("CreateRecipe");
+            navigation.closeDrawer();
+          }}
+        />
       </View>
     </View>
   );

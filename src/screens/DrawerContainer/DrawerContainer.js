@@ -49,6 +49,14 @@ export default function DrawerContainer(props) {
             navigation.closeDrawer();
           }}
         />
+        <MenuButton
+          title="Signup"
+          source={require("../../../assets/icons/wishlist.png")}
+          onPress={() => {
+            navigation.navigate("Signup");
+            navigation.closeDrawer();
+          }}
+        />
       </View>
     </View>
   );

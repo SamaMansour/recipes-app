@@ -5,47 +5,39 @@ import {
   TextInput,
   Button,
   StyleSheet,
+  ActivityIndicator,
+  Alert,
+  Text,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { categories } from "../../data/dataArrays";
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
-import { doc, setDoc } from "firebase/firestore"; 
+import { firebaseApp } from "../../utils/firebaseInit"; // Adjust the path based on your directory structure
 
-
-
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 export default function CreateRecipeScreen(props) {
-  const firebaseConfig = {
-    apiKey: "AIzaSyALY_L5QAVWGS_fx4oYJ8b3Fg-ni8sIELk",
-    authDomain: "recipes-app-6538e.firebaseapp.com",
-    databaseURL: "https://recipes-app-6538e-default-rtdb.firebaseio.com",
-    projectId: "recipes-app-6538e",
-    storageBucket: "recipes-app-6538e.appspot.com",
-    messagingSenderId: "943409972016",
-    appId: "1:943409972016:web:a0ab10c3f46f8b245b3ef5",
-    measurementId: "G-RJWRPB172G",
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-
-
   const { navigation } = props;
 
   const [recipeTitle, setRecipeTitle] = useState("");
   const [description, setDescription] = useState("");
   const [time, setTime] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState(categories[0]?.name || "");
   const [ingredients, setIngredients] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const validateInputs = () => {
+    return recipeTitle && description && time && category && ingredients;
+  };
 
   const handleSubmit = async () => {
+    if (!validateInputs()) {
+      Alert.alert("Input Error", "Please fill out all fields.");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
     const newRecipe = {
       title: recipeTitle,
       description,
@@ -56,16 +48,23 @@ export default function CreateRecipeScreen(props) {
         .map((ingredient) => ingredient.trim()),
     };
 
-    const db = getFirestore(app);
+    const db = getFirestore(firebaseApp);
 
     try {
       const docRef = await addDoc(collection(db, "recipes"), newRecipe);
       console.log("Recipe added with ID: ", docRef.id);
-    } catch (error) {
-      console.error("Error adding recipe: ", error);
+      setLoading(false);
+      navigation.goBack();
+    } catch (err) {
+      console.error("Error adding recipe: ", err);
+      setError(err.message);
+      setLoading(false);
     }
   };
 
+  if (loading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
 
   return (
     <ScrollView style={styles.container}>
@@ -99,12 +98,8 @@ export default function CreateRecipeScreen(props) {
           style={styles.picker}
           onValueChange={(itemValue) => setCategory(itemValue)}
         >
-          {categories.map((category) => (
-            <Picker.Item
-              key={category.id}
-              label={category.name}
-              value={category.name}
-            />
+          {categories.map((cat) => (
+            <Picker.Item key={cat.id} label={cat.name} value={cat.name} />
           ))}
         </Picker>
       </View>
@@ -116,6 +111,7 @@ export default function CreateRecipeScreen(props) {
           onChangeText={setIngredients}
         />
       </View>
+      {error && <Text style={styles.errorText}>{error}</Text>}
       <View style={styles.formGroup}>
         <Button title="Submit Recipe" onPress={handleSubmit} />
       </View>
@@ -142,5 +138,10 @@ const styles = StyleSheet.create({
   picker: {
     height: 40,
     width: "100%",
+  },
+  errorText: {
+    color: "red",
+    marginBottom: 10,
+    paddingHorizontal: 10,
   },
 });
